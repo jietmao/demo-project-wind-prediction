@@ -1,0 +1,85 @@
+volumes:
+  grafana_data: {}
+
+networks:
+  front-tier:
+  back-tier:
+  mlflow-tier:
+  prefect-tier:
+
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - AWS_DEFAULT_REGION=eu-west-1
+      - AWS_ACCESS_KEY_ID=abc
+      - AWS_SECRET_ACCESS_KEY=xyz
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5432:5432"
+    networks:
+      - back-tier
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow
+    restart: always
+    ports:
+      - "5000:5000"
+    entrypoint:
+      - mlflow
+      - "server"
+      - "--backend-store-uri"
+      - "sqlite:///mlflow.db"
+      - "--artifacts-destination"
+      - "/artifacts"
+      - "--host"
+      - "0.0.0.0"
+    networks:
+      - mlflow-tier
+
+  prefect:
+    image: prefecthq/prefect:2-python3.10
+    restart: always
+    ports:
+      - "4200:4200"
+    entrypoint:
+      - "prefect"
+      - "server"
+      - "start"
+      - "--host"
+      - "0.0.0.0"
+    environment:
+      - PREFECT_API_URL=http://127.0.0.1:4200/api
+    networks:
+      - prefect-tier
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - back-tier
+      - front-tier
+
+  grafana:
+    image: grafana/grafana
+    user: "472"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config/grafana_datasources.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
+      - ./config/grafana_dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
+      - ./dashboards:/opt/grafana/dashboards
+    networks:
+      - back-tier
+      - front-tier
+    restart: always
