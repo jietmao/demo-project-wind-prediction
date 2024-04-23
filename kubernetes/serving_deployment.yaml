@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-serving
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: model-serving
+  template:
+    metadata:
+      labels:
+        app: model-serving
+    spec:
+      containers:
+        - name: model-serving
+          image: model-serving:1.0.0
+          ports:
+            - containerPort: 8000
+          env:
+          - name: POSTGRESQL_HOST
+            value: host.minikube.internal
+          - name: MLFLOW_URI
+            value: http://host.minikube.internal:5000
+          - name: AWS_ENDPOINT_URL
+            value: http://host.minikube.internal:4566

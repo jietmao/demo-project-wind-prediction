@@ -1,0 +1,6 @@
+worker:
+  apiConfig: server
+  config:
+    workPool: minikube-pool
+  serverApiConfig:
+    apiUrl: http://host.minikube.internal:4200/api

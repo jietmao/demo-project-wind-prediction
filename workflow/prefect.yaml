@@ -1,0 +1,37 @@
+# Welcome to your prefect.yaml file! You can use this file for storing and managing
+# configuration for deploying your flows. We recommend committing this file to source
+# control along with your flow code.
+
+# Generic metadata about this project
+name: mlops-zoomcamp
+prefect-version: 2.16.9
+
+# build section allows you to manage and build docker images
+# build:
+
+# push section allows you to manage if and how this project is uploaded to remote locations
+# push:
+
+# pull section allows you to provide instructions for cloning this project in remote locations
+pull:
+- prefect.deployments.steps.set_working_directory:
+    directory: /app
+
+# the deployments section allows you to provide configuration for deploying flows
+deployments:
+- name: wind_prediction_model_training
+  version:
+  tags: []
+  description: Training pipeline for wind prediction model
+  entrypoint: src/train.py:main
+  parameters: {}
+  work_pool:
+    name: minikube-pool
+    work_queue_name:
+    job_variables:
+      image: wind-prediction-training:1.0.0
+      env:
+        MLFLOW_URI: "http://host.minikube.internal:5000"
+        AWS_ENDPOINT_URL: "http://host.minikube.internal:4566"
+  build: false
+  schedules: []

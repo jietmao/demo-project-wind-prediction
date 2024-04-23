@@ -1,0 +1,25 @@
+source:
+  path: 's3://project-bucket/integration_test'
+mlflow:
+  tracking_uri : http://127.0.0.1:5000
+  experiment_name: wind-prediction-random-forest-regressor-integration-test
+  model_name: wind-prediction-model-integration-test
+hyperparameters:
+  seed: 99
+  n_trials: 1
+  n_estimators:
+    low: 1
+    high: 100
+    step: 1
+  max_depth:
+    low: 1
+    high: 20
+    step: 1
+  min_samples_split:
+    low: 2
+    high: 10
+    step: 1
+  min_samples_leaf:
+    low: 1
+    high: 4
+    step: 1

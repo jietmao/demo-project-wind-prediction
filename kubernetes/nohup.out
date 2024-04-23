@@ -1,0 +1,15 @@
+|-----------|---------------|-------------|---------------------------|
+| NAMESPACE |     NAME      | TARGET PORT |            URL            |
+|-----------|---------------|-------------|---------------------------|
+| default   | model-serving |        8000 | http://192.168.49.2:30001 |
+|-----------|---------------|-------------|---------------------------|
+* Starting tunnel for service model-serving.
+|-----------|---------------|-------------|------------------------|
+| NAMESPACE |     NAME      | TARGET PORT |          URL           |
+|-----------|---------------|-------------|------------------------|
+| default   | model-serving |             | http://127.0.0.1:33821 |
+|-----------|---------------|-------------|------------------------|
+* Opening service default/model-serving in default browser...
+  http://127.0.0.1:33821
+! Because you are using a Docker driver on linux, the terminal needs to be open to run it.
+* Stopping tunnel for service model-serving.
